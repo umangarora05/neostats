@@ -10,17 +10,9 @@ from app.api.routes import documents
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-allowed_origins = ["*"]
+allowed_origins = {"https://neostats.umangarora.in"}
 if settings.FRONTEND_URL:
-    allowed_origins = [settings.FRONTEND_URL.rstrip("/")]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=bool(settings.FRONTEND_URL),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    allowed_origins.add(settings.FRONTEND_URL.rstrip("/"))
 
 app.include_router(documents.router, prefix=settings.API_V1_STR + "/documents", tags=["documents"])
 
@@ -54,3 +46,12 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "An unexpected error occurred."}},
     )
+
+
+app = CORSMiddleware(
+    app,
+    allow_origins=sorted(allowed_origins),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
