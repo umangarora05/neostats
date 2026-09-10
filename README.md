@@ -100,9 +100,9 @@ This application utilizes **Google Gemini 1.5/2.5 Flash** via multimodal prompts
 This project was developed with the assistance of GitHub Copilot and Google Gemini to accelerate writing boilerplate code, UI styling, and robust validation logic.
 
 ## Deployed Links
-- **Frontend / Dashboard**: [Add your deployed URL here]
-- **API Base URL**: [Add your deployed API URL here]
-- **Swagger Docs**: [Add your deployed docs URL here]
+- **Frontend / Dashboard**: https://neostats.umangarora.in/
+- **API Base URL**: https://neostats-api.onrender.com
+- **Swagger Docs**: https://neostats-api.onrender.com/docs
 
 ## Deploying with Render and Vercel
 
