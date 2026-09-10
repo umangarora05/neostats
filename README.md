@@ -1,4 +1,4 @@
-neostats.umangarora.in
+https://neostats.umangarora.in
 
 # NeoStats Intelligent Document Platform
 
