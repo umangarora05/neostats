@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoStats | Document Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #d1fae5;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .navbar {
+            background-color: var(--surface-color);
+            padding: 16px 48px;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 48px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 32px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        select:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-pass {
+            color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .status-failed {
+            color: var(--error);
+            background-color: var(--error-bg);
+        }
+
+        .view-btn {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .view-btn:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 850px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>NeoStats Platform</h1>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2>Process Document</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="document_type">Document Type</label>
+                <select id="document_type" name="document_type" required>
+                    <option value="invoice">Invoice</option>
+                    <option value="balance_sheet">Balance Sheet</option>
+                    <option value="profit_and_loss">Profit & Loss</option>
+                    <option value="cash_flow_statement">Cash Flow Statement</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="file">Upload File</label>
+                <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required>
+            </div>
+            <button type="submit" id="submitBtn">Extract Data</button>
+            <div class="loader" id="loading">Processing document securely...</div>
+        </form>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+        <h2 style="margin: 28px 28px 20px 28px;">Processing History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Document Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Processed At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="documentsList">
+                <!-- Data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Processing...';
+        loading.style.display = 'block';
+
+        try {
+            const response = await fetch('/api/v1/documents/process', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if(response.ok) {
+                loadDocuments();
+            } else {
+                alert('Error: ' + (data.error ? data.error.message : JSON.stringify(data)));
+            }
+        } catch (err) {
+            alert('Request failed. Please try again.');
+            console.error(err);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Extract Data';
+            loading.style.display = 'none';
+        }
+    });
+
+    async function loadDocuments() {
+        try {
+            const response = await fetch('/api/v1/documents');
+            const docs = await response.json();
+            const tbody = document.getElementById('documentsList');
+            tbody.innerHTML = '';
+            
+            docs.forEach(doc => {
+                const statusClass = doc.processing_status === 'PASS' ? 'status-pass' : 'status-failed';
+                const date = new Date(doc.processing_metadata.processed_at).toLocaleString(undefined, {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight: 500; color: var(--text-main);">${doc.document_name}</div>
+                    </td>
+                    <td><span style="color: var(--text-muted); font-size:13px;">${doc.document_type.replace(/_/g, ' ').toUpperCase()}</span></td>
+                    <td><span class="status-badge ${statusClass}">${doc.processing_status}</span></td>
+                    <td><span style="color: var(--text-muted); font-size:13px;">${date}</span></td>
+                    <td><a href="/document/${doc.document_name}" class="view-btn">View Results</a></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch(e) {
+            console.error("Failed to load documents", e);
+        }
+    }
+
+    loadDocuments();
+</script>
+
+</body>
+</html>

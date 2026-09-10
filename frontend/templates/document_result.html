@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result: {{ document_name }} | NeoStats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #d1fae5;
+            --error: #dc2626;
+            --error-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .navbar {
+            background-color: var(--surface-color);
+            padding: 16px 48px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 16px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .key-val {
+            display: flex;
+            margin-bottom: 14px;
+            font-size: 14px;
+            align-items: flex-start;
+        }
+
+        .key-val strong {
+            width: 200px;
+            flex-shrink: 0;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .val-content {
+            flex-grow: 1;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pass { color: var(--success); background-color: var(--success-bg); }
+        .fail { color: var(--error); background-color: var(--error-bg); }
+        .warn { color: var(--warning); background-color: var(--warning-bg); }
+        
+        .null-val { color: var(--text-muted); font-style: italic; font-weight: 400; }
+        .low-conf { color: var(--warning); border-bottom: 1px dashed var(--warning); cursor: help; }
+        
+        .evidence-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 10px;
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: help;
+            font-weight: 400;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Result: {{ document_name }}</h1>
+    <a href="/" class="back-link">&larr; Back to Dashboard</a>
+</div>
+
+<div class="container">
+    <div class="grid-2">
+        <div class="card" id="summaryCard">
+            <h2>Processing Summary <span id="mainStatus"></span></h2>
+            <div id="summaryContent">Loading...</div>
+        </div>
+        <div class="card" id="validationCard">
+            <h2>Financial Validations <span id="valStatus"></span></h2>
+            <div id="validationContent"></div>
+        </div>
+    </div>
+
+    <div class="card" id="extractedCard">
+        <h2>Extracted Data</h2>
+        <div id="extractedContent"></div>
+    </div>
+
+    <div class="card" id="jsonCard">
+        <h2>Raw JSON Output</h2>
+        <pre id="jsonContent"></pre>
+    </div>
+</div>
+
+<script>
+    const documentName = "{{ document_name }}";
+
+    function formatVal(obj) {
+        if (obj === null || obj === undefined || obj.value === null) {
+            return `<span class="null-val">Missing / Null</span>`;
+        }
+        
+        let displayVal = obj.value !== undefined ? obj.value : obj;
+        let html = `<span>${displayVal}</span>`;
+        
+        if (obj.confidence && obj.confidence < 0.8) {
+            html = `<span class="low-conf" title="Low Confidence: ${obj.confidence.toFixed(2)}">${displayVal}</span>`;
+        }
+        
+        if (obj.evidence && obj.evidence.page_number) {
+            html += `<span class="evidence-tag" title="Source: '${obj.evidence.source_text || 'N/A'}'">Page ${obj.evidence.page_number}</span>`;
+        } else if (obj.page_number) {
+            html += `<span class="evidence-tag">Page ${obj.page_number}</span>`;
+        }
+        
+        return html;
+    }
+
+    async function loadDocument() {
+        try {
+            const response = await fetch(`/api/v1/documents/${documentName}`);
+            const data = await response.json();
+
+            // Summary
+            const statusClass = data.processing_status === 'PASS' ? 'pass' : 'fail';
+            document.getElementById('mainStatus').innerHTML = `<span class="status-badge ${statusClass}">${data.processing_status}</span>`;
+            
+            document.getElementById('summaryContent').innerHTML = `
+                <div class="key-val"><strong>Document Type</strong> <div class="val-content">${data.document_type.replace(/_/g, ' ').toUpperCase()}</div></div>
+                <div class="key-val"><strong>File Supported</strong> <div class="val-content">${data.file_validation.is_supported ? 'Yes' : 'No'}</div></div>
+                <div class="key-val"><strong>Page Count</strong> <div class="val-content">${data.file_validation.page_count}</div></div>
+                <div class="key-val"><strong>Processing Time</strong> <div class="val-content">${data.processing_metadata.processing_time_ms} ms</div></div>
+                <div class="key-val"><strong>Processed At</strong> <div class="val-content">${new Date(data.processing_metadata.processed_at).toLocaleString()}</div></div>
+            `;
+
+            // Extracted Data
+            let extractedHtml = '';
+            const ed = data.extracted_data;
+            if(ed && Object.keys(ed).length > 0) {
+                // Header fields
+                for(const key in ed) {
+                    if(key !== 'line_items' && key !== 'additional_header_fields') {
+                        extractedHtml += `<div class="key-val"><strong>${key.replace(/_/g, ' ').toUpperCase()}</strong> <div class="val-content">${formatVal(ed[key])}</div></div>`;
+                    }
+                }
+                
+                // Additional Header fields
+                if (ed.additional_header_fields && Object.keys(ed.additional_header_fields).length > 0) {
+                    extractedHtml += `<h3 style="margin-top:24px; font-size:14px; color:var(--text-main); font-weight:600; text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:8px;">Additional Fields</h3>`;
+                    for(const key in ed.additional_header_fields) {
+                        extractedHtml += `<div class="key-val" style="margin-top:12px;"><strong>${key.replace(/_/g, ' ').toUpperCase()}</strong> <div class="val-content">${formatVal(ed.additional_header_fields[key])}</div></div>`;
+                    }
+                }
+
+                // Line Items
+                if(ed.line_items && ed.line_items.length > 0) {
+                    extractedHtml += `<h3 style="margin-top:24px; font-size:14px; color:var(--text-main); font-weight:600; text-transform:uppercase;">Line Items</h3><div style="overflow-x:auto;"><table><thead><tr>`;
+                    
+                    // Collect all possible keys from line items
+                    let keysSet = new Set();
+                    ed.line_items.forEach(item => Object.keys(item).forEach(k => { if(k !== 'additional_details') keysSet.add(k); }));
+                    const headers = Array.from(keysSet);
+                    
+                    headers.forEach(h => extractedHtml += `<th>${h.replace(/_/g, ' ')}</th>`);
+                    extractedHtml += `</tr></thead><tbody>`;
+                    ed.line_items.forEach(item => {
+                        extractedHtml += `<tr>`;
+                        headers.forEach(h => {
+                            let cellVal = item[h];
+                            if (cellVal === null || cellVal === undefined) cellVal = `<span class="null-val">-</span>`;
+                            extractedHtml += `<td>${cellVal}</td>`;
+                        });
+                        extractedHtml += `</tr>`;
+                    });
+                    extractedHtml += `</tbody></table></div>`;
+                }
+            } else {
+                extractedHtml = "<div class='null-val'>No data extracted.</div>";
+            }
+            document.getElementById('extractedContent').innerHTML = extractedHtml;
+
+            // Validations
+            let valHtml = '';
+            const val = data.validation;
+            const valStatusClass = val.overall_status === 'PASS' ? 'pass' : 'fail';
+            document.getElementById('valStatus').innerHTML = `<span class="status-badge ${valStatusClass}">${val.overall_status}</span>`;
+            
+            if(val.issues && val.issues.length > 0) {
+                valHtml += `<div style="background-color:var(--error-bg); border-left:4px solid var(--error); padding:12px 16px; border-radius:4px; margin-bottom:16px;">
+                    <strong style="color:var(--error); display:block; margin-bottom:6px; font-size:13px;">Validation Issues:</strong>
+                    <ul style="margin:0; padding-left:20px; color:var(--text-main); font-size:13px;">`;
+                val.issues.forEach(iss => valHtml += `<li style="margin-bottom:4px;">${iss}</li>`);
+                valHtml += `</ul></div>`;
+            }
+
+            if(val.checks && val.checks.length > 0) {
+                valHtml += `<div style="overflow-x:auto;"><table style="margin-top:0;"><thead><tr><th>Check Name</th><th>Calculated</th><th>Reported</th><th>Status</th></tr></thead><tbody>`;
+                val.checks.forEach(check => {
+                    let cClass = 'pass';
+                    if (check.status === 'FAILED') cClass = 'fail';
+                    if (check.status === 'NOT_APPLICABLE') cClass = 'warn';
+                    
+                    valHtml += `<tr>
+                        <td>
+                            <div style="font-weight:500; color:var(--text-main);">${check.name.replace(/_/g, ' ').toUpperCase()}</div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:4px; font-family:monospace;">${check.formula}</div>
+                        </td>
+                        <td>${check.calculated_value !== null ? Number(check.calculated_value).toFixed(2) : '-'}</td>
+                        <td>${check.reported_value !== null ? Number(check.reported_value).toFixed(2) : '-'}</td>
+                        <td><span class="status-badge ${cClass}">${check.status}</span></td>
+                    </tr>`;
+                });
+                valHtml += `</tbody></table></div>`;
+            } else {
+                valHtml += `<div style="color:var(--text-muted); font-size:13px;">No validations performed.</div>`;
+            }
+            document.getElementById('validationContent').innerHTML = valHtml;
+
+            // JSON
+            document.getElementById('jsonContent').textContent = JSON.stringify(data, null, 2);
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById('summaryContent').innerHTML = `<span class="fail">Failed to load document data. Check server logs.</span>`;
+        }
+    }
+
+    loadDocument();
+</script>
+
+</body>
+</html>
