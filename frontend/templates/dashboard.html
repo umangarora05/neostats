@@ -552,6 +552,12 @@
             const docs = await response.json();
             const tbody = document.getElementById('documentsList');
             tbody.innerHTML = '';
+
+            if (!response.ok || !Array.isArray(docs)) {
+                const message = docs?.error?.message || docs?.detail || 'Unable to load document history.';
+                tbody.innerHTML = `<tr><td colspan="5" style="color:var(--error); padding:24px 16px;">${message}</td></tr>`;
+                throw new Error(message);
+            }
             
             docs.forEach(doc => {
                 const statusClass = doc.processing_status === 'PASS' ? 'status-pass' : 'status-failed';

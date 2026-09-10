@@ -7,7 +7,7 @@ from .config import settings
 
 from pymongo.errors import ConfigurationError
 
-client = MongoClient(settings.DATABASE_URL)
+client = MongoClient(settings.DATABASE_URL, serverSelectionTimeoutMS=10000)
 
 try:
     db = client.get_default_database()
