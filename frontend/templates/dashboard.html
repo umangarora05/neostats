@@ -35,24 +35,35 @@
 
         .navbar {
             background-color: var(--forest);
-            padding: 16px 20px;
-            min-height: 96px;
+            padding: 16px max(20px, calc((100vw - 1240px) / 2));
+            min-height: 72px;
             display: flex;
             align-items: center;
         }
 
+        .nav-shell {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
         .navbar h1 {
-            background: #f4f5ee;
-            border-radius: 24px;
             margin: 0;
-            padding: 22px 32px;
             flex: 1;
             width: auto;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
+            font-size: 21px;
             font-weight: 600;
-            color: var(--text-main);
+            color: #f4f5ee;
             letter-spacing: -1px;
+        }
+
+        .nav-label {
+            color: #b4d9c4;
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
 
         .container {
@@ -67,7 +78,7 @@
         .hero {
             max-width: 980px;
             margin: 0 auto;
-            padding: 76px 28px 26px;
+            padding: 78px 28px 34px;
             text-align: center;
         }
 
@@ -117,6 +128,55 @@
             padding: 30px;
             box-shadow: 0 18px 50px rgba(0, 61, 44, .08);
             backdrop-filter: blur(12px);
+        }
+
+        .card-kicker {
+            color: var(--primary-hover);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .upload-zone {
+            display: block;
+            border: 1px dashed rgba(0, 61, 44, .28);
+            border-radius: 18px;
+            padding: 22px 18px;
+            background: rgba(244, 245, 238, .72);
+            cursor: pointer;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary-hover);
+            background: rgba(228, 245, 220, .65);
+            transform: translateY(-1px);
+        }
+
+        .upload-zone strong {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .upload-zone span {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .upload-zone input {
+            display: none !important;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 8px;
+            color: var(--primary-hover);
+            font-size: 12px;
+            min-height: 16px;
         }
 
         h2 {
@@ -203,6 +263,23 @@
             margin: 0 30px 20px;
         }
 
+        .history-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 30px 20px;
+        }
+
+        .history-header h2 {
+            margin: 0;
+        }
+
+        .history-caption {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
         table {
             width: 100%;
             border-collapse: separate;
@@ -275,8 +352,11 @@
             }
 
             .navbar h1 {
-                padding: 17px 22px;
                 font-size: 20px;
+            }
+
+            .nav-label {
+                display: none;
             }
 
             .hero {
@@ -297,8 +377,11 @@
 <body>
 
 <div class="navbar">
-    <h1>NEO<span style="color:var(--primary-hover);">STATS</span></h1>
-    <span id="backendStatus" style="margin-left:auto; font-size:13px; color:#d8e8df;">Connecting to API...</span>
+    <div class="nav-shell">
+        <h1>NEO<span style="color:var(--primary);">STATS</span></h1>
+        <span class="nav-label">Financial intelligence</span>
+        <span id="backendStatus" style="font-size:13px; color:#d8e8df;">Connecting to API...</span>
+    </div>
 </div>
 
 <section class="hero">
@@ -309,6 +392,7 @@
 
 <div class="container">
     <div class="card">
+        <div class="card-kicker">Start a new analysis</div>
         <h2>Process Document</h2>
         <form id="uploadForm">
             <div class="form-group">
@@ -322,7 +406,12 @@
             </div>
             <div class="form-group">
                 <label for="file">Upload File</label>
-                <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required>
+                <label class="upload-zone" for="file">
+                    <strong>Choose a financial document</strong>
+                    <span>PDF, JPG, or PNG · Securely processed</span>
+                    <span class="file-name" id="fileName">No file selected</span>
+                    <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required>
+                </label>
             </div>
             <button type="submit" id="submitBtn">Extract Data</button>
             <div class="loader" id="loading">Processing document securely...</div>
@@ -330,7 +419,10 @@
     </div>
 
     <div class="card history-card">
-        <h2>Processing History</h2>
+        <div class="history-header">
+            <h2>Processing History</h2>
+            <span class="history-caption">Your latest document runs</span>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -399,6 +491,11 @@
             submitBtn.innerText = 'Extract Data';
             loading.style.display = 'none';
         }
+    });
+
+    document.getElementById('file').addEventListener('change', function() {
+        const fileName = document.getElementById('fileName');
+        fileName.textContent = this.files.length ? this.files[0].name : 'No file selected';
     });
 
     async function loadDocuments() {
