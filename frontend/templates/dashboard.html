@@ -4,25 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeoStats | Document Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --surface-color: #ffffff;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #059669;
-            --success-bg: #d1fae5;
-            --error: #dc2626;
-            --error-bg: #fee2e2;
+            --bg-color: #f4f5ee;
+            --surface-color: rgba(255, 255, 255, 0.88);
+            --primary: #56bd2f;
+            --primary-hover: #3e9d20;
+            --forest: #003d2c;
+            --text-main: #101512;
+            --text-muted: #647069;
+            --border: rgba(0, 61, 44, 0.14);
+            --success: #278d35;
+            --success-bg: #e4f5dc;
+            --error: #bd3939;
+            --error-bg: #fde5e2;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-color);
+            background-image: linear-gradient(rgba(0, 61, 44, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 61, 44, .045) 1px, transparent 1px);
+            background-size: 56px 56px;
             color: var(--text-main);
             margin: 0;
             padding: 0;
@@ -31,49 +34,100 @@
         }
 
         .navbar {
-            background-color: var(--surface-color);
-            padding: 16px 48px;
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            background-color: var(--forest);
+            padding: 16px 20px;
+            min-height: 96px;
             display: flex;
             align-items: center;
         }
 
         .navbar h1 {
+            background: #f4f5ee;
+            border-radius: 24px;
             margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e293b;
-            letter-spacing: -0.5px;
+            padding: 22px 32px;
+            flex: 1;
+            width: auto;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: -1px;
         }
 
         .container {
-            max-width: 1100px;
-            margin: 48px auto;
-            padding: 0 24px;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 72px 28px 96px;
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 32px;
+            grid-template-columns: minmax(280px, 360px) 1fr;
+            gap: 24px;
+        }
+
+        .hero {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 76px 28px 26px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            color: var(--primary-hover);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .hero h2 {
+            border: 0;
+            max-width: 900px;
+            margin: 18px auto 14px;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(42px, 7vw, 76px);
+            font-weight: 500;
+            line-height: .98;
+            letter-spacing: -4px;
+            text-transform: none;
+        }
+
+        .hero h2 span {
+            color: var(--primary-hover);
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: 0 auto;
+            color: var(--text-muted);
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        #backendStatus {
+            padding: 8px 14px;
+            color: #d8e8df;
+            white-space: nowrap;
         }
 
         .card {
             background: var(--surface-color);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 18px 50px rgba(0, 61, 44, .08);
+            backdrop-filter: blur(12px);
         }
 
         h2 {
             margin-top: 0;
-            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-main);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
+            padding-bottom: 14px;
             margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.5px;
         }
 
         .form-group {
@@ -85,17 +139,17 @@
             font-size: 13px;
             color: var(--text-main);
             margin-bottom: 6px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         select, input[type="file"] {
             width: 100%;
             padding: 10px 14px;
             background-color: #fff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            font-family: 'DM Sans', sans-serif;
             font-size: 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
             box-sizing: border-box;
@@ -104,18 +158,18 @@
         select:focus, input[type="file"]:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 4px rgba(86, 189, 47, 0.16);
         }
 
         button {
             width: 100%;
             background-color: var(--primary);
-            color: white;
+            color: #072316;
             border: none;
-            padding: 12px 16px;
+            padding: 15px 16px;
             font-size: 14px;
             font-weight: 500;
-            border-radius: 6px;
+            border-radius: 999px;
             cursor: pointer;
             transition: background-color 0.2s;
             margin-top: 8px;
@@ -123,6 +177,7 @@
 
         button:hover {
             background-color: var(--primary-hover);
+            color: white;
         }
 
         button:disabled {
@@ -139,6 +194,15 @@
             font-weight: 500;
         }
 
+        .history-card {
+            padding: 30px 0 0;
+            overflow: hidden;
+        }
+
+        .history-card h2 {
+            margin: 0 30px 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: separate;
@@ -152,6 +216,9 @@
             font-weight: 500;
             font-size: 13px;
             border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 11px;
         }
 
         td {
@@ -166,7 +233,7 @@
         }
 
         tr:hover td {
-            background-color: #f8fafc;
+            background-color: rgba(86, 189, 47, .06);
         }
 
         .status-badge {
@@ -190,7 +257,7 @@
         }
 
         .view-btn {
-            color: var(--primary);
+            color: var(--primary-hover);
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
@@ -203,8 +270,26 @@
         }
 
         @media (max-width: 850px) {
+            .navbar {
+                min-height: 72px;
+            }
+
+            .navbar h1 {
+                padding: 17px 22px;
+                font-size: 20px;
+            }
+
+            .hero {
+                padding-top: 54px;
+            }
+
             .container {
                 grid-template-columns: 1fr;
+                padding-top: 36px;
+            }
+
+            .hero h2 {
+                letter-spacing: -2px;
             }
         }
     </style>
@@ -212,9 +297,15 @@
 <body>
 
 <div class="navbar">
-    <h1>NeoStats Platform</h1>
-    <span id="backendStatus" style="margin-left:auto; font-size:13px; color:var(--text-muted);">Connecting to API...</span>
+    <h1>NEO<span style="color:var(--primary-hover);">STATS</span></h1>
+    <span id="backendStatus" style="margin-left:auto; font-size:13px; color:#d8e8df;">Connecting to API...</span>
 </div>
+
+<section class="hero">
+    <div class="eyebrow">Document intelligence platform</div>
+    <h2>Turn financial documents into <span>measurable insight.</span></h2>
+    <p>Upload a document and let NeoStats extract, validate, and organize the numbers that matter.</p>
+</section>
 
 <div class="container">
     <div class="card">
@@ -238,8 +329,8 @@
         </form>
     </div>
 
-    <div class="card" style="padding:0; overflow:hidden;">
-        <h2 style="margin: 28px 28px 20px 28px;">Processing History</h2>
+    <div class="card history-card">
+        <h2>Processing History</h2>
         <table>
             <thead>
                 <tr>
