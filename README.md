@@ -103,3 +103,33 @@ This project was developed with the assistance of GitHub Copilot and Google Gemi
 - **Frontend / Dashboard**: [Add your deployed URL here]
 - **API Base URL**: [Add your deployed API URL here]
 - **Swagger Docs**: [Add your deployed docs URL here]
+
+## Deploying with Render and Vercel
+
+### 1. Deploy the backend to Render
+
+1. Create a new **Web Service** in Render from this repository.
+2. Use the included `render.yaml`, or set these values manually:
+   - **Root Directory**: `backend`
+   - **Build Command**: `pip install -r ../requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path**: `/api/v1/health`
+3. Add `DATABASE_URL` and `GEMINI_API_KEY` as Render environment variables. Use MongoDB Atlas for `DATABASE_URL`.
+4. Copy the deployed Render URL, for example `https://neostats-api.onrender.com`.
+
+The backend includes `backend/runtime.txt` to pin Render to Python 3.12.4. This is required because the currently pinned dependency versions do not provide compatible prebuilt wheels for Python 3.14.
+
+### 2. Deploy the frontend to Vercel
+
+1. Import the same repository into Vercel.
+2. Set **Root Directory** to `frontend`.
+3. Deploy with the default static site settings. `frontend/vercel.json` routes `/` to the dashboard template.
+4. Before deploying, set `window.NEOSTATS_API_BASE_URL` in `frontend/config.js` to the Render URL:
+
+   ```js
+   window.NEOSTATS_API_BASE_URL = "https://neostats-api.onrender.com";
+   ```
+
+5. Copy the Vercel URL and set Render's `FRONTEND_URL` environment variable to that exact URL, without a trailing slash. Redeploy the Render service.
+
+When the Vercel dashboard is opened, it calls `GET /api/v1/health` on the Render service and displays the API connection status. Uploads and document history use the same Render API base URL.

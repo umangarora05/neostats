@@ -213,6 +213,7 @@
 
 <div class="navbar">
     <h1>NeoStats Platform</h1>
+    <span id="backendStatus" style="margin-left:auto; font-size:13px; color:var(--text-muted);">Connecting to API...</span>
 </div>
 
 <div class="container">
@@ -256,7 +257,27 @@
     </div>
 </div>
 
+<script src="/config.js"></script>
 <script>
+    const apiBaseUrl = (window.NEOSTATS_API_BASE_URL || '').replace(/\/$/, '');
+    const apiUrl = (path) => `${apiBaseUrl}${path}`;
+
+    async function pingBackend() {
+        const status = document.getElementById('backendStatus');
+        try {
+            const response = await fetch(apiUrl('/api/v1/health'));
+            if (!response.ok) {
+                throw new Error(`Backend returned ${response.status}`);
+            }
+            status.textContent = 'API connected';
+            status.style.color = 'var(--success)';
+        } catch (error) {
+            status.textContent = 'API unavailable';
+            status.style.color = 'var(--error)';
+            console.error('Backend health check failed', error);
+        }
+    }
+
     document.getElementById('uploadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -268,7 +289,7 @@
         loading.style.display = 'block';
 
         try {
-            const response = await fetch('/api/v1/documents/process', {
+            const response = await fetch(apiUrl('/api/v1/documents/process'), {
                 method: 'POST',
                 body: formData
             });
@@ -291,7 +312,7 @@
 
     async function loadDocuments() {
         try {
-            const response = await fetch('/api/v1/documents');
+            const response = await fetch(apiUrl('/api/v1/documents'));
             const docs = await response.json();
             const tbody = document.getElementById('documentsList');
             tbody.innerHTML = '';
@@ -310,7 +331,7 @@
                     <td><span style="color: var(--text-muted); font-size:13px;">${doc.document_type.replace(/_/g, ' ').toUpperCase()}</span></td>
                     <td><span class="status-badge ${statusClass}">${doc.processing_status}</span></td>
                     <td><span style="color: var(--text-muted); font-size:13px;">${date}</span></td>
-                    <td><a href="/document/${doc.document_name}" class="view-btn">View Results</a></td>
+                    <td><a href="${apiUrl(`/document/${encodeURIComponent(doc.document_name)}`)}" class="view-btn">View Results</a></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -319,6 +340,7 @@
         }
     }
 
+    pingBackend();
     loadDocuments();
 </script>
 

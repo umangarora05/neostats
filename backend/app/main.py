@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -8,11 +10,14 @@ from app.api.routes import documents
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# CORS
+allowed_origins = ["*"]
+if settings.FRONTEND_URL:
+    allowed_origins = [settings.FRONTEND_URL.rstrip("/")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=allowed_origins,
+    allow_credentials=bool(settings.FRONTEND_URL),
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -24,9 +29,13 @@ def health_check():
     return {"status": "ok"}
 
 from fastapi.templating import Jinja2Templates
-templates = Jinja2Templates(directory="d:/projects/neostats/frontend/templates")
+project_root = Path(__file__).resolve().parents[3]
+frontend_root = project_root / "frontend"
+templates = Jinja2Templates(directory=str(frontend_root / "templates"))
 
-app.mount("/static", StaticFiles(directory="d:/projects/neostats/frontend/static"), name="static")
+static_directory = frontend_root / "static"
+if static_directory.is_dir():
+    app.mount("/static", StaticFiles(directory=str(static_directory)), name="static")
 
 @app.get("/")
 def read_root(request: Request):
