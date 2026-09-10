@@ -573,7 +573,7 @@
                     <td><span style="color: var(--text-muted); font-size:13px;">${doc.document_type.replace(/_/g, ' ').toUpperCase()}</span></td>
                     <td><span class="status-badge ${statusClass}">${doc.processing_status}</span></td>
                     <td><span style="color: var(--text-muted); font-size:13px;">${date}</span></td>
-                    <td><a href="${apiUrl(`/document/${encodeURIComponent(doc.document_name)}`)}" class="view-btn">View Results</a></td>
+                    <td><a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}`)}" class="view-btn" target="_blank" rel="noopener">View Results</a></td>
                 `;
                 tbody.appendChild(tr);
             });
