@@ -161,13 +161,17 @@ def validate_profit_and_loss(data: dict) -> list:
     tax = safe_float(data.get("tax"))
     net_profit = safe_float(data.get("net_profit"))
     
-    # Revenue - COGS - Opex - Tax ≈ Net Profit (Simplified check if standard P&L)
+    add_fields = data.get("additional_header_fields", {})
+    interest_expended = safe_float(add_fields.get("interest_expended"))
+    provisions = safe_float(add_fields.get("provisions_and_contingencies"))
+
+    # Revenue - COGS - Opex - Tax - Interest Expended - Provisions ≈ Net Profit (Simplified check if standard P&L)
     is_applicable = is_present(data.get("revenue")) and is_present(data.get("net_profit"))
-    calculated_np = revenue - cogs - opex - tax
+    calculated_np = revenue - cogs - opex - tax - interest_expended - provisions
     checks.append(create_check(
         "net_profit_calculation",
-        "revenue - cost_of_sales - operating_expenses - tax",
-        {"revenue": revenue, "cost_of_sales": cogs, "operating_expenses": opex, "tax": tax},
+        "revenue - cost_of_sales - operating_expenses - tax - interest_expended - provisions_and_contingencies",
+        {"revenue": revenue, "cost_of_sales": cogs, "operating_expenses": opex, "tax": tax, "interest_expended": interest_expended, "provisions_and_contingencies": provisions},
         calculated_np, net_profit, is_applicable
     ))
 
