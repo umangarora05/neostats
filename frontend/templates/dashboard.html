@@ -188,8 +188,21 @@
         .upload-zone.has-file {
             border-style: solid;
             border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(228, 245, 220, .9), rgba(255, 255, 255, .9));
+            background: linear-gradient(135deg, #f0fbe9, #ffffff);
             padding-right: 58px;
+        }
+
+        .upload-zone.has-file strong {
+            color: #064e3b;
+        }
+
+        .upload-zone.has-file > span:not(.file-name) {
+            color: #356b54;
+        }
+
+        .upload-zone.has-file .file-name {
+            color: #15803d;
+            font-weight: 700;
         }
 
         .upload-zone strong {
