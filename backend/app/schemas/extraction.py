@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 class Evidence(BaseModel):
     source_text: Optional[str] = Field(default=None)
@@ -28,6 +28,7 @@ class InvoiceExtraction(BaseModel):
     discount: ExtractedValue = Field(default_factory=ExtractedValue)
     total_amount: ExtractedValue = Field(default_factory=ExtractedValue)
     line_items: List[InvoiceLineItem] = Field(default_factory=list)
+    additional_header_fields: Dict[str, Any] = Field(default_factory=dict)
 
 class FinancialLineItem(BaseModel):
     description: Optional[str] = Field(default=None)
@@ -38,6 +39,7 @@ class BalanceSheetExtraction(BaseModel):
     total_liabilities: ExtractedValue = Field(default_factory=ExtractedValue)
     total_equity: ExtractedValue = Field(default_factory=ExtractedValue)
     line_items: List[FinancialLineItem] = Field(default_factory=list)
+    additional_header_fields: Dict[str, Any] = Field(default_factory=dict)
 
 class ProfitAndLossExtraction(BaseModel):
     revenue: ExtractedValue = Field(default_factory=ExtractedValue)
@@ -48,6 +50,7 @@ class ProfitAndLossExtraction(BaseModel):
     tax: ExtractedValue = Field(default_factory=ExtractedValue)
     net_profit: ExtractedValue = Field(default_factory=ExtractedValue)
     line_items: List[FinancialLineItem] = Field(default_factory=list)
+    additional_header_fields: Dict[str, Any] = Field(default_factory=dict)
 
 class CashFlowExtraction(BaseModel):
     operating_cash_flow: ExtractedValue = Field(default_factory=ExtractedValue)
@@ -57,3 +60,4 @@ class CashFlowExtraction(BaseModel):
     net_change_in_cash: ExtractedValue = Field(default_factory=ExtractedValue)
     closing_cash: ExtractedValue = Field(default_factory=ExtractedValue)
     line_items: List[FinancialLineItem] = Field(default_factory=list)
+    additional_header_fields: Dict[str, Any] = Field(default_factory=dict)

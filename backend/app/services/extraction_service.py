@@ -49,7 +49,7 @@ async def extract_data_from_document(file_content: bytes, mime_type: str, docume
     1. Extract ALL meaningful information visible in the document. Do not just look for the standard fields.
     2. If a value is missing or not visible in the document, you MUST return null. DO NOT hallucinate, infer, or assume values.
     3. For every ExtractedValue, fill out the `evidence` object. Provide the exact `source_text` from the document that supports the value, and the `page_number` where it is found.
-    4. For any additional headers, totals, or fields not explicitly named in the schema, include them.
+    4. For any additional headers, totals, or fields not explicitly named in the schema, include them in the `additional_header_fields` dictionary.
     5. Ensure complete table extraction. Include all rows in `line_items`.
     6. Return ONLY valid JSON matching the exact schema provided above.
     7. For confidence, you can estimate a confidence score between 0.0 and 1.0.
