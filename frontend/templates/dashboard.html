@@ -576,7 +576,12 @@
                         ${doc.validation?.issues?.[0] ? `<div style="max-width:190px; margin-top:6px; color:var(--text-muted); font-size:11px; line-height:1.35;">${doc.validation.issues[0]}</div>` : ''}
                     </td>
                     <td><span style="color: var(--text-muted); font-size:13px;">${date}</span></td>
-                    <td><a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}`)}" class="view-btn" target="_blank" rel="noopener">View Results</a></td>
+                    <td>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
+                            <a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}/json`)}" class="view-btn" target="_blank" rel="noopener">View JSON</a>
+                            <a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}/word`)}" class="view-btn" download>Download Word</a>
+                        </div>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
