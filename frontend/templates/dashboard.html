@@ -382,6 +382,44 @@
             text-decoration: underline;
         }
 
+        .result-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .result-actions .view-btn {
+            border: 1px solid;
+            border-radius: 6px;
+            padding: 7px 10px;
+            white-space: nowrap;
+        }
+
+        .result-action-json {
+            border-color: #86efac;
+            color: #15803d;
+            background: #f0fdf4;
+        }
+
+        .result-action-word {
+            border-color: #93c5fd;
+            color: #1d4ed8;
+            background: #eff6ff;
+        }
+
+        .result-action-json:hover {
+            background: #dcfce7;
+            color: #166534;
+            text-decoration: none;
+        }
+
+        .result-action-word:hover {
+            background: #dbeafe;
+            color: #1e40af;
+            text-decoration: none;
+        }
+
         @media (max-width: 850px) {
             .navbar {
                 min-height: 72px;
@@ -577,9 +615,9 @@
                     </td>
                     <td><span style="color: var(--text-muted); font-size:13px;">${date}</span></td>
                     <td>
-                        <div style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
-                            <a href="#" class="view-btn" onclick="viewJson('${encodeURIComponent(doc.document_name)}'); return false;">View JSON</a>
-                            <a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}/word`)}" class="view-btn" download>Download Word</a>
+                                        <div class="result-actions">
+                                            <a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}/json`)}" class="view-btn result-action-json" target="_blank" rel="noopener">View JSON</a>
+                                            <a href="${apiUrl(`/api/v1/documents/${encodeURIComponent(doc.document_name)}/word`)}" class="view-btn result-action-word" download>Download Word</a>
                         </div>
                     </td>
                 `;
@@ -588,38 +626,6 @@
         } catch(e) {
             console.error("Failed to load documents", e);
         }
-    }
-
-    function viewJson(encodedDocumentName) {
-        const resultWindow = window.open('', '_blank');
-        if (!resultWindow) {
-            alert('Please allow pop-ups to view the JSON result.');
-            return;
-        }
-
-        resultWindow.document.write('<!doctype html><title>Loading JSON...</title><pre style="font:14px monospace; white-space:pre-wrap;">Loading...</pre>');
-        resultWindow.document.close();
-
-        fetch(apiUrl(`/api/v1/documents/${encodedDocumentName}/json`))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const formattedJson = JSON.stringify(data, null, 2);
-                const escapedJson = formattedJson
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-                resultWindow.document.title = 'JSON Result';
-                resultWindow.document.body.innerHTML = `<pre style="background:#111; color:#eee; margin:0; padding:20px; font:14px monospace; white-space:pre-wrap;">${escapedJson}</pre>`;
-            })
-            .catch(error => {
-                resultWindow.document.title = 'JSON Result';
-                resultWindow.document.body.innerHTML = `<p style="font-family:Arial; color:#b91c1c; padding:20px;">Unable to load JSON result: ${error.message}</p>`;
-            });
     }
 
     pingBackend();

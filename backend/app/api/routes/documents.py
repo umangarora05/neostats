@@ -99,10 +99,7 @@ def download_document_json(document_name: str, db: Database = Depends(get_db)):
     data = _document_response_data(doc)
     return Response(
         content=json.dumps(data, indent=2, ensure_ascii=False),
-        media_type="application/json",
-        headers={
-            "Content-Disposition": f'inline; filename="{_download_name(document_name, "json")}"'
-        },
+        media_type="text/plain",
     )
 
 
